@@ -1,83 +1,66 @@
 # University Outreach Tool
 
-Version 1 foundation for a centralised university outreach CRM.
+Centralised university outreach CRM and intelligence platform.
 
-## Front end
+## Final application modules
 
-Static single-page application connected to the live Apps Script backend with:
-- Live dashboard metrics
-- Universities database with search and filters
-- Add University with duplicate detection
-- University profile view
-- Contacts directory
-- Follow-up queue
-- Outreach activity timeline
-- Analytics summary
-- Backend connection status
-- Settings/system information
+### Live CRM
+- Dashboard with outreach KPIs and pipeline
+- University database with search/filtering
+- University profile and outreach history
+- Add/edit university
+- Multiple contacts per university
+- Outreach activity logging
+- Follow-up scheduling and queue
+- Duplicate university/contact protection
+- Bulk stage updates
+- CSV export
+- CSV/XLS/XLSX import with preview and duplicate-safe insertion
+- Analytics
+- Audit-ready relational Google Sheets backend
 
-The front end is configured to use the deployed Google Apps Script web app as its API. No credentials or private keys are committed to this repository.
+### Final architecture modules
+- Research Queue
+- Contact Verification
+- University Rankings
+- Documents
+- Email Log
+- Notifications
+- Saved Views
 
-## Google Drive backend
+The Google Sheets schema is version **2.0.0**.
 
-Project folder: **University Outreach Tool**
+## Google Drive structure
 
-Structure:
+`University Outreach Tool`
 - `01 - Database`
   - `University Outreach Tool - Master Database`
 - `02 - Imports`
   - `Pending Review`
   - `Processed`
 - `03 - Exports`
+  - `Reports`
 - `04 - University Documents`
 - `05 - System & Logs`
+- `06 - Research & Verification`
+- `07 - Email & Communications`
 - `99 - Archive`
 
-### Master Database tabs
+## Apps Script
 
-- `README`
-- `Universities`
-- `Contacts`
-- `Outreach Activity`
-- `Follow-Ups`
-- `Users`
-- `Import Log`
-- `Audit Log`
-- `Lookups`
-- `System Config`
+The currently deployed V1 API handles the live CRM actions. The repository contains the final extension at:
 
-The schema is relational: university records are stored once and linked to contacts, activities and follow-ups using stable IDs.
+- `apps-script/FinalModules.gs`
+- `apps-script/DEPLOY_FINAL.md`
 
-## Apps Script backend
+Deploy that extension to activate the advanced queue endpoints without changing the existing web-app URL.
 
-The deployed API supports:
-- `health`
-- `getLookups`
-- `getDashboard`
-- `listUniversities`
-- `getUniversity`
-- `createUniversity`
-- `updateUniversity`
-- `archiveUniversity`
-- `bulkUpdateUniversities`
-- `listContacts`
-- `createContact`
-- `updateContact`
-- `markContactInactive`
-- `listActivities`
-- `createActivity`
-- `listFollowUps`
-- `createFollowUp`
-- `updateFollowUp`
-- `completeFollowUp`
+## External integrations requiring separate authorization
 
-## Version 1 remaining build steps
+The system does **not** fake these capabilities. Their database, UI and integration hooks are built, but execution stays feature-flagged until credentials/permissions are provided:
 
-1. Add create/edit UI for contacts.
-2. Add create/edit UI for outreach activity and follow-ups.
-3. Add university edit and bulk-update controls.
-4. Add CSV/XLSX import review and duplicate-resolution workflow.
-5. Add filtered export.
-6. Add authentication/authorisation before production use.
+1. **Automated university research** — requires an approved server-side search/research provider. All researched updates should enter `Research Queue` and require human approval.
+2. **Automatic contact monitoring** — requires a scheduled server-side verification job using compliant public sources. Changes enter `Contact Verification` for review; old contacts remain historical/inactive rather than being deleted.
+3. **Microsoft 365 email integration** — requires Microsoft Graph app registration and tenant/mailbox permissions before send/receive/thread summarisation can be enabled.
 
-No credentials or secrets should be committed to this repository.
+Never commit API secrets, Microsoft client secrets or access tokens to this public repository. Use Apps Script Script Properties or an approved secret manager.
