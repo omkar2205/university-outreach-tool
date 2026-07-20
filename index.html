@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>University Outreach Tool</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
   <div class="app">
@@ -17,6 +18,9 @@
         <button data-view="followups">Follow-ups</button>
         <button data-view="activity">Activity</button>
         <button data-view="import">Import</button>
+        <button data-view="research">Research</button>
+        <button data-view="verification">Verification</button>
+        <button data-view="emails">Emails</button>
         <button data-view="analytics">Analytics</button>
         <button data-view="settings">Settings</button>
       </nav>
@@ -37,44 +41,14 @@
   <div id="modalBackdrop" class="modal-backdrop hidden">
     <form id="universityForm" class="modal">
       <div class="modal-heading">
-        <div>
-          <h2>Add university</h2>
-          <p>Create a new university record in the central database.</p>
-        </div>
+        <div><h2 id="modalTitle">Add university</h2><p id="modalSubtitle">Create a university record.</p></div>
         <button type="button" class="icon-button" id="closeModal" aria-label="Close">×</button>
       </div>
       <div id="formMessage" class="form-message hidden"></div>
-      <div class="form-grid">
-        <label class="span-2">University name
-          <input name="universityName" required placeholder="e.g. University of Manchester">
-        </label>
-        <label>Country
-          <input name="country" required placeholder="United Kingdom">
-        </label>
-        <label>Region
-          <input name="region" placeholder="Europe">
-        </label>
-        <label>Category
-          <select name="category" id="categorySelect"><option value="">Select category</option></select>
-        </label>
-        <label>Reference
-          <select name="referenceSource" id="referenceSelect"><option value="Normal">Normal</option></select>
-        </label>
-        <label>Stage
-          <select name="outreachStage" id="stageSelect">
-            <option>Not Contacted</option><option>Introduction</option><option>Discovery</option><option>Partnership</option><option>Not Interested</option>
-          </select>
-        </label>
-        <label>Website
-          <input name="website" placeholder="https://www.example.edu">
-        </label>
-        <label class="span-2">Notes
-          <textarea name="generalNotes" rows="4" placeholder="Initial notes about the university or outreach opportunity"></textarea>
-        </label>
-      </div>
+      <div id="modalFields" class="form-grid"></div>
       <div class="modal-actions">
         <button type="button" id="cancelModal">Cancel</button>
-        <button type="submit" class="primary" id="saveUniversityBtn">Save University</button>
+        <button type="submit" class="primary" id="saveModalBtn">Save</button>
       </div>
     </form>
   </div>
