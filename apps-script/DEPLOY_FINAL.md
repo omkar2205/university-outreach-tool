@@ -1,14 +1,14 @@
 # Final Apps Script upgrade
 
-The live Apps Script deployment currently has the V1 `Code.gs`. The final Google Sheets schema and front-end have been built, but the advanced queue endpoints must be added to the bound Apps Script project before those modules can read/write live data.
+The live Apps Script deployment currently has the V1 `Code.gs`. The final Google Sheets schema and front-end have been built, but the final endpoints must be added to the bound Apps Script project before those modules can read/write live data.
 
-## 1. Add FinalModules.gs
+## 1. Add or replace FinalModules.gs
 
 In the Apps Script project attached to **University Outreach Tool - Master Database**:
 
-1. Click **+ > Script**.
+1. Click **+ > Script** if `FinalModules.gs` does not exist.
 2. Name it `FinalModules`.
-3. Paste the complete contents of `apps-script/FinalModules.gs` from this repository.
+3. Replace its contents with the complete current contents of `apps-script/FinalModules.gs` from this repository.
 
 ## 2. Add these cases to `routeRequest_(action, params)` in Code.gs
 
@@ -16,6 +16,9 @@ Insert these cases before the existing `default:` block:
 
 ```javascript
     // FINAL ARCHITECTURE MODULES
+    case 'bulkImportUniversities':
+      return bulkImportUniversities_(params);
+
     case 'listResearch':
       return listResearch_(params);
 
@@ -55,6 +58,12 @@ Insert these cases before the existing `default:` block:
 Use **Deploy > Manage deployments > Edit > New version > Deploy**.
 
 Keep the existing web-app URL. The front end is already configured to use it.
+
+### Important import fix
+
+The original browser importer called `createUniversity` once for every row, which was too slow for a real university database and provided poor failure feedback. The final importer now calls `bulkImportUniversities` once. The server reads existing universities once, skips duplicates by canonical university name/domain, writes all new rows in one batch, and records the result in `Import Log`.
+
+After redeploying, test with a small file of 3-5 universities first. You should see a final result showing New / Duplicates / Errors, and the new rows should appear immediately in the `Universities` tab.
 
 ## External integrations
 
